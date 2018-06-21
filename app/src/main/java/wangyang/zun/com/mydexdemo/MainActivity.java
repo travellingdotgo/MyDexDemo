@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 import dalvik.system.DexClassLoader;
-import wangyang.zun.com.mydexdemo.dynamic.Dynamic;
+import wangyang.zun.com.mydexdemo.dynamic.IDynamic1;
 
 
 /**
@@ -22,7 +22,7 @@ import wangyang.zun.com.mydexdemo.dynamic.Dynamic;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Dynamic dynamic;
+    private IDynamic1 dynamic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
         try {
             // 类加载器负责读取 .class文件，并把它转为 Class实例，这个实例就表示一个java类
             // 加载 dex文件中的Class，格式是：包名+类名（全类名）
-            Class libClazz = dexClassLoader.loadClass("wangyang.zun.com.mydexdemo.dynamic.impl.IDynamic");
+            Class libClazz = dexClassLoader.loadClass("wangyang.zun.com.mydexdemo.dynamic.impl.Dynamic1");
             // 调用Class的 newInstance()方法，创建Class的对象 dynamic
             // Dynamic 是 dex文件中之前的一个接口类
-            dynamic = (Dynamic) libClazz.newInstance();
+            dynamic = (IDynamic1) libClazz.newInstance();
             if (dynamic != null)
                 Toast.makeText(this, dynamic.sayHelloy(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
