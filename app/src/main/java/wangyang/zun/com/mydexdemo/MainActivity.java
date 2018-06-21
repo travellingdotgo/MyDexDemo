@@ -1,12 +1,16 @@
 package wangyang.zun.com.mydexdemo;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import dalvik.system.DexClassLoader;
 import wangyang.zun.com.mydexdemo.dynamic.IDynamic1;
@@ -21,6 +25,7 @@ import wangyang.zun.com.mydexdemo.dynamic.IDynamic1;
  */
 
 public class MainActivity extends AppCompatActivity {
+    public final static String TAG = "MainActivity";
 
     private IDynamic1 dynamic;
 
@@ -65,10 +70,37 @@ public class MainActivity extends AppCompatActivity {
             // Dynamic 是 dex文件中之前的一个接口类
             dynamic = (IDynamic1) libClazz.newInstance();
             if (dynamic != null)
-                Toast.makeText(this, dynamic.sayHelloy(), Toast.LENGTH_LONG).show();
+                Log.i(TAG, dynamic.sayHelloy());
+                //Toast.makeText(this, dynamic.sayHelloy(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //SystemClock.sleep(5*1000);
+
+        // test 2
+
+        //加载其中的类
+
+        Class<?> mToastClass;
+        Object mInstanceObject;
+        Method getInstanceMethod,showToastMethod;
+        Context context = getApplicationContext();
+
+        try {
+            mToastClass = dexClassLoader.loadClass("wangyang.zun.com.mydexdemo.dynamic.impl.ToastUtil");
+
+            getInstanceMethod = mToastClass.getMethod("getInstance",Context.class);
+            showToastMethod = mToastClass.getMethod("showToast");
+
+            mInstanceObject = getInstanceMethod.invoke(mToastClass,context);
+            showToastMethod.invoke(mInstanceObject);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
 }
